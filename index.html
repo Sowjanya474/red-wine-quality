@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Red Wine Quality | Machine learning project</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍷</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--claret:#5B1A2E;--cellar:#1C0B14;--mist:#F5EEF1;--line:#D9C4CC;--ink:#2B2330;--soft:#6B5A63;--teal:#1F6F63;--tealL:#7FD1BF;--rose:#E58AA3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--mist);color:var(--ink);font:400 1.02rem/1.65 Manrope,system-ui,sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;color:var(--claret);line-height:1.15;margin:0 0 .6rem;letter-spacing:-.01em}
+h1{font-size:clamp(2.2rem,5vw,3.6rem);font-weight:600}
+h2{font-size:clamp(1.7rem,3.5vw,2.3rem);font-weight:600}
+h3{font-size:1.25rem;font-weight:600;margin-top:2rem}
+p{max-width:68ch;margin:0 0 1rem}
+a{color:var(--claret)}
+a:focus-visible,button:focus-visible{outline:3px solid #B88A9A;outline-offset:2px}
+header{position:sticky;top:0;z-index:5;background:rgba(245,238,241,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.bar{max-width:1060px;margin:auto;padding:.8rem 1.2rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.brand{font-family:Fraunces,serif;font-weight:600;font-size:1.15rem;color:var(--claret);text-decoration:none;margin-right:auto}
+nav{display:flex;gap:.2rem;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--ink);padding:.35rem .75rem;border-radius:999px;font-weight:500;font-size:.95rem}
+nav a:hover{background:#EADDE3}
+nav a[aria-current=page]{background:var(--claret);color:#fff}
+main{max-width:1060px;margin:auto;padding:3rem 1.2rem 4rem}
+section[hidden]{display:none}
+.hero{display:grid;grid-template-columns:1.5fr 1fr;gap:3rem;align-items:center}
+.lead{font-size:1.15rem}
+.btns{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.6rem 0}
+.btn{display:inline-block;padding:.65rem 1.3rem;border-radius:999px;font-weight:700;text-decoration:none;border:1.5px solid var(--claret)}
+.btn.main{background:var(--claret);color:#fff}
+.btn.alt{color:var(--claret)}
+.btn:hover{opacity:.88}
+.glass{width:100%;max-width:300px;justify-self:center}
+dl.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem 2rem;margin:3rem 0 0;border-top:1px solid var(--line);padding-top:1.8rem}
+dl.facts dt{font-family:Fraunces,serif;font-size:2rem;font-weight:600;color:var(--claret);line-height:1}
+dl.facts dd{margin:.3rem 0 0;color:var(--soft);font-size:.92rem}
+.row{display:grid;grid-template-columns:150px 1fr 60px;gap:.8rem;align-items:center;margin:.45rem 0;font-size:.93rem}
+.row .t{height:10px;background:#EADDE3;border-radius:5px;overflow:hidden}
+.row .t i{display:block;height:100%;background:var(--claret);border-radius:5px}
+.row .t i.neg{background:#B6788A}
+.row b{text-align:right;font-variant-numeric:tabular-nums}
+.chart{max-width:760px;margin:1rem 0 1.5rem}
+table{border-collapse:collapse;width:100%;max-width:760px;font-size:.95rem;margin:1rem 0}
+th,td{text-align:right;padding:.6rem .7rem;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:700;color:var(--claret)}
+tr.best td{background:#EADDE3;font-weight:700}
+.scroll{overflow-x:auto}
+.cm{display:grid;grid-template-columns:auto repeat(2,110px);gap:6px;max-width:380px;font-size:.9rem;margin:1rem 0;align-items:center}
+.cm div{text-align:center}
+.cm .c{padding:1.1rem .4rem;border-radius:10px;font-family:Fraunces,serif;font-size:1.6rem;font-weight:600}
+.cm .hi{background:var(--claret);color:#fff}.cm .lo{background:#EADDE3;color:var(--claret)}
+.cm .h{color:var(--soft);font-size:.82rem}
+.note{border-left:3px solid var(--claret);padding:.2rem 0 .2rem 1rem;color:var(--soft);max-width:68ch;margin:1.2rem 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+.cta{background:var(--cellar);color:var(--mist);border-radius:20px;padding:2rem;margin:1.5rem 0}
+.cta h3{color:var(--mist);margin-top:0}
+.cta .btn.main{background:var(--tealL);color:#0E2A25;border-color:var(--tealL)}
+.cta .btn.alt{color:var(--mist);border-color:#8A6B78}
+footer{border-top:1px solid var(--line);color:var(--soft);font-size:.88rem;padding:1.5rem 1.2rem;text-align:center}
+@media(max-width:760px){.hero,.two{grid-template-columns:1fr}.row{grid-template-columns:110px 1fr 48px}.glass{max-width:180px;justify-self:start}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+<a class="brand" href="#home">Red Wine Quality</a>
+<nav aria-label="Pages">
+<a href="#home">Overview</a><a href="#data">Data</a><a href="#analysis">Analysis</a><a href="#models">Models</a><a href="#explain">Explainability</a><a href="#try">Try it</a>
+</nav></div></header>
+
+<main>
+<section id="home">
+<div class="hero">
+<div>
+<h1>Can a lab report predict a good wine?</h1>
+<p class="lead">This project uses 11 chemical measurements of Portuguese red wines to estimate whether expert tasters would rate a wine 7 out of 10 or higher. It covers the full path: cleaning the data, comparing models, explaining the result, and a live app.</p>
+<div class="btns"><a class="btn main" href="#try">Try the predictor</a><a class="btn alt" href="#models">See the results</a></div>
+</div>
+<svg class="glass" viewBox="0 0 120 200" role="img" aria-label="Wine glass, partly filled">
+<defs><clipPath id="b"><path d="M22 8H98C98 70 84 104 60 106C36 104 22 70 22 8Z"/></clipPath>
+<linearGradient id="w" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A3314F"/><stop offset="1" stop-color="#5B1A2E"/></linearGradient></defs>
+<g clip-path="url(#b)"><rect x="0" y="52" width="120" height="120" fill="url(#w)"/></g>
+<path d="M22 8H98C98 70 84 104 60 106C36 104 22 70 22 8Z" fill="none" stroke="#5B1A2E" stroke-width="2"/>
+<rect x="58" y="106" width="4" height="78" fill="#5B1A2E"/><ellipse cx="60" cy="185" rx="30" ry="5" fill="#5B1A2E"/>
+</svg>
+</div>
+<dl class="facts">
+<div><dt>1,359</dt><dd>unique red wines after removing 240 duplicate rows</dd></div>
+<div><dt>0.76</dt><dd>of good wines found on unseen data (recall)</dd></div>
+<div><dt>0.88</dt><dd>ROC-AUC on the held-out test set</dd></div>
+<div><dt>13.5%</dt><dd>of wines are rated 7 or higher, so the data is imbalanced</dd></div>
+</dl>
+</section>
+
+<section id="data" hidden>
+<h2>The data</h2>
+<p>The UCI Wine Quality dataset (Cortez et al., 2009) describes red and white Vinho Verde wines from northern Portugal. This project uses the red wines: 1,599 samples, each with 11 physicochemical measurements and a quality score given by tasters. There are no missing values.</p>
+<h3>The 11 measurements</h3>
+<p>Fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates and alcohol.</p>
+<h3>Cleaning</h3>
+<p>240 rows were exact duplicates. They were removed before splitting, because a copy of the same wine in both the training and test sets would let the model see the answer and inflate its score. That left 1,359 wines.</p>
+<h3>Defining “good”</h3>
+<p>Scores run from 3 to 8 in this data, and most wines get 5 or 6. A wine counts as <strong>good</strong> at 7 or above: 184 wines, or 13.5%.</p>
+<div class="chart" id="qchart" aria-label="Wine counts by quality score"></div>
+<p class="note">Source: Cortez, P., Cerdeira, A., Almeida, F., Matos, T., &amp; Reis, J. (2009). Wine Quality. UCI Machine Learning Repository. <a href="https://doi.org/10.24432/C56S3T">doi.org/10.24432/C56S3T</a>. Licensed CC BY 4.0.</p>
+</section>
+
+<section id="analysis" hidden>
+<h2>What the data shows</h2>
+<p>The correlation of each measurement with the quality score tells a simple story: stronger wines with more sulphates and less vinegar-like acidity score higher.</p>
+<div class="chart" id="cchart" aria-label="Correlation of each feature with quality"></div>
+<h3>Findings</h3>
+<p><strong>Alcohol</strong> has the strongest link to quality (r = 0.48), followed by <strong>volatile acidity</strong> in the other direction (r = −0.40). Residual sugar shows almost no relationship (r = 0.01).</p>
+<p>Several measurements move together: fixed acidity with pH (−0.69), citric acid (0.67) and density (0.67), and free with total sulfur dioxide (0.67). This matters for model choice, because tree-based models cope with correlated inputs better than plain linear ones.</p>
+<p class="note">Why accuracy alone misleads: a model that calls every wine “not good” is right 86% of the time and finds no good wines at all. Results below are judged on precision, recall and F1 for the good class.</p>
+</section>
+
+<section id="models" hidden>
+<h2>Models and results</h2>
+<p>Five models were compared with 5-fold cross-validation on the training set (1,087 wines), with class weights to handle the imbalance. The test set (272 wines) was kept untouched until the end.</p>
+<h3>Cross-validation, before tuning</h3>
+<div class="scroll"><table>
+<tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>F1 tuned</th></tr>
+<tr class="best"><td>Random Forest</td><td>0.888</td><td>0.709</td><td>0.292</td><td>0.409</td><td>0.521</td></tr>
+<tr><td>SVM</td><td>0.806</td><td>0.389</td><td>0.761</td><td>0.515</td><td>0.517</td></tr>
+<tr><td>Logistic Regression</td><td>0.786</td><td>0.371</td><td>0.816</td><td>0.508</td><td>0.509</td></tr>
+<tr><td>Gradient Boosting</td><td>0.873</td><td>0.538</td><td>0.352</td><td>0.423</td><td>–</td></tr>
+<tr><td>Decision Tree</td><td>0.841</td><td>0.408</td><td>0.360</td><td>0.381</td><td>–</td></tr>
+</table></div>
+<p>Tuning with grid search lifted the Random Forest most, because shallower trees (depth 8, at least 5 samples per leaf) stopped it from memorising the training data. After tuning, the three leading models are within about 0.012 F1 of each other, so they perform comparably. The Random Forest was chosen because it can be explained feature by feature.</p>
+<h3>Choosing the cut-off</h3>
+<p>Good wines are rare, so the model rarely reaches 50% confidence. The cut-off was set to 0.37 using only training data, which raised cross-validated F1 from 0.518 to 0.534.</p>
+<h3>Final test result (272 wines, 37 of them good)</h3>
+<div class="two"><div>
+<div class="cm" role="img" aria-label="Confusion matrix: 194 true not good, 41 false alarms, 9 missed, 28 found">
+<div></div><div class="h">Predicted not good</div><div class="h">Predicted good</div>
+<div class="h">Actually not good</div><div class="c lo">194</div><div class="c lo">41</div>
+<div class="h">Actually good</div><div class="c lo">9</div><div class="c hi">28</div>
+</div></div>
+<div><p>The model found <strong>28 of 37</strong> good wines (recall 0.76). When it said “good”, it was right 28 times out of 69 (precision 0.41). F1 for good wines is 0.53, close to the cross-validated 0.534, so there is no sign of overfitting.</p>
+<p>Overall accuracy of 0.82 is lower than the do-nothing baseline of 0.86, and that is expected: the baseline never finds a good wine.</p></div></div>
+<h3>Limits</h3>
+<p>Quality scores come from human tasters and are noisy. The test set holds only 37 good wines, so each one moves recall by about 2.7 points. All wines are Portuguese Vinho Verde, so the model should not be applied to other wine styles.</p>
+</section>
+
+<section id="explain" hidden>
+<h2>Why the model says what it says</h2>
+<p>Two views of the final Random Forest: how much each measurement matters overall, and which way it pushes a prediction (from SHAP values on the test set).</p>
+<div class="chart" id="ichart" aria-label="Random forest feature importance"></div>
+<h3>Direction of each effect</h3>
+<div class="scroll"><table>
+<tr><th>Measurement</th><th style="text-align:left">Effect on the chance of “good”</th></tr>
+<tr><td>Alcohol</td><td style="text-align:left">Higher alcohol raises it strongly</td></tr>
+<tr><td>Sulphates</td><td style="text-align:left">Higher raises it</td></tr>
+<tr><td>Volatile acidity</td><td style="text-align:left">Higher lowers it (the vinegar note)</td></tr>
+<tr><td>Citric acid</td><td style="text-align:left">Higher raises it</td></tr>
+<tr><td>Total sulfur dioxide, density</td><td style="text-align:left">Higher lowers it</td></tr>
+</table></div>
+<p class="note">These are patterns in this dataset, not proof that changing a measurement would change a wine’s rating. Density, for example, partly stands in for alcohol.</p>
+</section>
+
+<section id="try" hidden>
+<h2>Try it</h2>
+<div class="cta">
+<h3>The live predictor</h3>
+<p>Move sliders for the 11 measurements and watch the glass fill with the chance that the wine is rated 7 or higher. It also shows which measurements move the result most.</p>
+<div class="btns"><a class="btn main" href="https://red-wine-quality-2bgrxsapqvvizh4yc9tuzr.streamlit.app/" target="_blank" rel="noopener">Open the app</a><a class="btn alt" href="https://github.com/Sowjanya474/red-wine-quality" target="_blank" rel="noopener">View the code on GitHub</a></div>
+<p style="margin:0;opacity:.75;font-size:.9rem">The app may need a few seconds to wake up if nobody has used it recently.</p>
+</div>
+<h3>How the project was built</h3>
+<p>Python, pandas and scikit-learn for the pipeline; matplotlib, seaborn and SHAP for the analysis; Streamlit for the app; GitHub for the code. The steps are in the README of the repository, so anyone can rerun them.</p>
+</section>
+</main>
+
+<footer>Red Wine Quality · A machine learning project by Sowjanya K S · Data: UCI Wine Quality, CC BY 4.0</footer>
+
+<script>
+const pages=['home','data','analysis','models','explain','try'];
+function route(){
+  let h=location.hash.slice(1); if(!pages.includes(h)) h='home';
+  pages.forEach(p=>document.getElementById(p).hidden=(p!==h));
+  document.querySelectorAll('nav a').forEach(a=>{ if(a.getAttribute('href')==='#'+h) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+  document.title=(h==='home'?'':h[0].toUpperCase()+h.slice(1)+' | ')+'Red Wine Quality';
+  window.scrollTo(0,0);
+}
+function bars(id,data,max,fmt){
+  document.getElementById(id).innerHTML=data.map(([l,v])=>
+    `<div class="row"><span>${l}</span><div class="t"><i class="${v<0?'neg':''}" style="width:${Math.abs(v)/max*100}%"></i></div><b>${fmt(v)}</b></div>`).join('');
+}
+bars('qchart',[['Quality 3',10],['Quality 4',53],['Quality 5',577],['Quality 6',535],['Quality 7',167],['Quality 8',17]],600,v=>v);
+bars('cchart',[['Alcohol',.48],['Volatile acidity',-.40],['Sulphates',.25],['Citric acid',.23],['Total sulfur dioxide',-.18],['Density',-.18],['Chlorides',-.13]],.5,v=>(v>0?'+':'−')+Math.abs(v).toFixed(2));
+bars('ichart',[['Alcohol',.26],['Sulphates',.16],['Volatile acidity',.11],['Citric acid',.10],['Total sulfur dioxide',.07],['Density',.07],['Fixed acidity',.06],['Chlorides',.055],['pH',.045],['Free sulfur dioxide',.04],['Residual sugar',.027]],.27,v=>'≈'+v.toFixed(2));
+addEventListener('hashchange',route); route();
+</script>
+</body>
+</html>
