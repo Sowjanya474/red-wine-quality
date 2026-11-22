@@ -4,6 +4,10 @@ Machine learning project that predicts whether a red wine is rated **good** (qua
 
 **Live demo:** https://red-wine-quality-2bgrxsapqvvizh4yc9tuzr.streamlit.app/
 
+**Website:** https://sowjanya474.github.io/red-wine-quality/
+
+**Presentation:** [Download the slides](docs/Red_Wine_Quality.pptx)
+
 ## Dataset
 UCI Wine Quality (red), Cortez et al. (2009): 1,599 samples, 11 features, quality scores 3 to 8. Licensed CC BY 4.0.
 https://archive.ics.uci.edu/dataset/186/wine+quality
